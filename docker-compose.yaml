@@ -1,0 +1,37 @@
+version: '3.7'
+
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: qwerty
+      POSTGRES_DB: dict
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+  
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+    environment:
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=qwerty
+      - POSTGRES_DB=dict
+      - PORT=3000
+      - MODE=DEV
+    volumes:
+      - .:/app
+    command: npm run start:dev
+    # entrypoint: ["sh", "-c", "npm run migration:run && npm run start:dev"]
+
+networks:
+  default:
+    driver: bridge
