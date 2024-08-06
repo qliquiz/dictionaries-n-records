@@ -30,7 +30,7 @@ services:
     volumes:
       - .:/app
     command: npm run start:dev
-    # entrypoint: ["sh", "-c", "npm run migration:run && npm run start:dev"]
+    entrypoint: ["sh", "-c", "npm run migration:run && npm run start:dev"]
 
 networks:
   default:

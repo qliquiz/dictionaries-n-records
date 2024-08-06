@@ -6,7 +6,7 @@ import { Record } from './record/record.entity';
 
 dotenv.config();
 
-export const AppDataSource = new DataSource({
+const AppDataSource = new DataSource({
     type: 'postgres',
     host: process.env.POSTGRES_HOST,
     port: +process.env.POSTGRES_PORT,
@@ -14,8 +14,9 @@ export const AppDataSource = new DataSource({
     password: process.env.POSTGRES_PASSWORD,
     database: process.env.POSTGRES_DB,
     entities: [Dictionary, Record],
-    migrations: [join(__dirname, 'migrations/*.ts')],
+    migrations: [join(__dirname, 'migrations/*.{ts,js}')],
     synchronize: false,
+    // logging: true
 });
 
 export default AppDataSource;

@@ -9,23 +9,26 @@ import { ApolloDriverConfig } from '@nestjs/apollo';
 import { Dictionary } from './dictionary/dictionary.entity';
 import { Record } from './record/record.entity';
 import { RecordModule } from './record/record.module';
+import AppDataSource from './data-source';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: `.env`,
-      validationSchema: Joi.object({ 
+      // envFilePath: `.env`,
+      /* validationSchema: Joi.object({ 
         POSTGRES_HOST: Joi.string().required(),
         POSTGRES_PORT: Joi.number().required(),
         POSTGRES_USER: Joi.string().required(),
         POSTGRES_PASSWORD: Joi.string().required(), 
         POSTGRES_DB: Joi.string().required(),
         PORT: Joi.number()
-      })
+      }) */
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
+      useFactory: async () => AppDataSource.options
+      /* imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
@@ -35,11 +38,11 @@ import { RecordModule } from './record/record.module';
         password: configService.get('POSTGRES_PASSWORD'),
         database: configService.get('POSTGRES_DB'),
         entities: [Dictionary, Record],
-        synchronize: true,
-        /* migrations: ['src/migrations/*.ts'],
+        synchronize: false,
+        migrations: ['src/migrations/*.ts'],
         migrationsRun: true,
-        logging: true */
-      })
+        logging: true
+      }) */
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
